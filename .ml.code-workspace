@@ -1,0 +1,32 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "C_Cpp.formatting": "vcFormat",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "editor.minimap.enabled": false,
+    "explorer.confirmDragAndDrop": false,
+    "workbench.iconTheme": "material-icon-theme",
+    "editor.smoothScrolling": true,
+    "editor.cursorSmoothCaretAnimation": "on",
+    "window.zoomLevel": 0,
+    "files.associations": {
+      ".env.production": "dotenv",
+      "libft.h": "c",
+      "malloc.h": "c",
+      "assert.h": "c",
+      "stdbool.h": "c",
+      "heap.h": "c",
+      "resource.h": "c"
+    },
+    "files.exclude": {
+      "**/*.o": false,
+      "**/*.a": false,
+      "libs": false
+    }
+  }
+}

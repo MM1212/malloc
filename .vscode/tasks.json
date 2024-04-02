@@ -1,0 +1,18 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build malloc",
+      "type": "shell",
+      "command": "make",
+    },
+    {
+      "label": "Build malloc test",
+      "type": "shell",
+      "dependsOn": "Build malloc",
+      "command": "make test"
+    }
+  ]
+}
