@@ -24,7 +24,10 @@ LIBS =  -L$(LIBFT_BIN) -lft -lpthread -fPIC -shared
 
 CC = clang
 
-DEBUG = true
+DEBUG = false
+ifneq ($(debug),)
+DEBUG = $(debug)
+endif
 
 ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)

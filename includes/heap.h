@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 12:00:15 by martiper          #+#    #+#             */
-/*   Updated: 2024/04/02 23:46:00 by martiper         ###   ########.fr       */
+/*   Updated: 2024/04/03 14:59:00 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # define  __USE_MISC
 #endif
 #include <sys/mman.h>
+#include <pthread.h>
 
 #define TINY_POOL_SIZE_MULTIPLIER 128 // * PAGE_SIZE
 #define SMALL_POOL_SIZE_MULTIPLIER 1024 // * PAGE_SIZE
@@ -48,6 +49,7 @@ typedef struct s_chunk
 typedef struct s_pool
 {
   size_t size; // size of the pool, 0 if infinite
+  char* slug;
   uint32_t max_chunk_size; // max_chunk_size to use the pool
   uint32_t min_chunk_size; // min_chunk_size to use the pool
   void* data; // ptr to the first byte of the pool
@@ -64,14 +66,18 @@ typedef struct s_heap
   size_t page_size;
   size_t total_allocd;
   struct rlimit limits;
+  bool enable_asserts;
+  bool enable_log_chunk_alloc;
 } t_heap;
 
 static t_heap heap = {0};
+static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
 #define TINY_POOL (heap.pools[TINY_POOL_IDX])
 #define SMALL_POOL (heap.pools[SMALL_POOL_IDX])
-#define LARGE_POOL (heap.pools[LARGE_POOL_IDX])
+#define LARGE_POOL (heap.large_pool)
 #define IS_LARGE_POOL(pool) (pool->size == 0)
+
 
 static size_t align_up_to_power_of_2(size_t size, size_t power);
 static size_t align_down_to_power_of_2(size_t size, size_t power);
@@ -80,3 +86,17 @@ static size_t align_down(size_t size);
 static void* ft_memmove8(void* dst, const void* src, size_t n);
 static void* ft_bzero8(void* dst, size_t n);
 static void hexdump(void* ptr, size_t size);
+static void show_chunk(int target, t_chunk* chunk, size_t indent, bool dump);
+static void show_pool(t_pool* pool, size_t indent, bool dump, bool data);
+static void show_heap(bool dump);
+
+#ifdef DEBUG
+  #include <libft.h>
+  #define DEBUG_LOG(...) ft_printf(__VA_ARGS__)
+  #define DEBUG_CHUNK(chunk) show_chunk(chunk, 0, false)
+  #define DEBUG_POOL(pool) show_pool(pool, 0, false, false)
+#else
+  #define DEBUG_LOG(...)
+  #define DEBUG_CHUNK(chunk)
+  #define DEBUG_POOL(pool)
+#endif
