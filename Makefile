@@ -20,7 +20,7 @@ LIBFT_ARCH = $(addprefix $(LIBFT_BIN)/,libft.a)
 
 
 INCLUDES = -Iincludes -I. -I$(LIBFT_INCLUDES)
-LIBS =  -L$(LIBFT_BIN) -lft -lpthread -fPIC -shared
+LIBS =  -L$(LIBFT_BIN) -lft -lpthread -shared
 
 CC = clang
 
@@ -50,6 +50,7 @@ RESET = \033[0m
 
 CFLAGS = \
 		$(INCLUDES) \
+		-fPIC \
 		-MT $@ -MMD -MP -MF $(DEP_DIR)/$*.d \
 		-Wall -Wextra -Werror \
 		-DVERSION="\"$$(cat VERSION)\"" \
@@ -82,7 +83,7 @@ $(NAME): $(OBJ_FILES) $(LIBFT_ARCH)
 	@echo "$(TAG) modifying link $(YELLOW)$(notdir $(LINK_NAME))$(RESET).."
 	@rm -f $(LINK_NAME)
 	@ln -s $(notdir $(NAME)) $(LINK_NAME)
-	@echo "$(TAG) done$(RESET)!"
+	@echo "$(TAG) built $(YELLOW)v$(shell cat VERSION)$(RESET)!"
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR) $(DEP_DIR)
 	@echo "$(TAG) compiling $(YELLOW)$<$(RESET).."
